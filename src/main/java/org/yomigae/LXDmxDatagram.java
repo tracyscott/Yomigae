@@ -57,7 +57,7 @@ public abstract class LXDmxDatagram extends LXDatagram {
    */
   protected int preRGBHook(int offset) {
     // LaLuce hack.  It always has a master dimmer channel with just simple RGB mode.
-    this.buffer[offset] = (byte)0xff;
+    this.buffer[offset] = (byte)(255 & 0xff);
     return 1;
   }
 
