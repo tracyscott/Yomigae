@@ -55,7 +55,9 @@ public class Output {
     }
     E131DmxDatagram laluceDatagram = new E131DmxDatagram(1, 5 * dmxChannelsForUniverse.length,
         dmxChannelsForUniverse);
-
+    YFixture laluceFixture = new YFixture(1);
+    laluceDatagram.addFixture(laluceFixture);
+    
     String dmxIpAddress = "239.255.0.1";
     try {
       laluceDatagram.setAddress(dmxIpAddress);

@@ -7,7 +7,9 @@ import heronarts.lx.output.LXDatagram;
 import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -22,6 +24,8 @@ import java.util.Map;
  */
 public abstract class LXDmxDatagram extends LXDatagram {
 
+  protected List<YFixture> fixtures;
+
   /**
    * Construct a LXDmxDatagram that represents a single UDP packet.
    * @param bufferSize The buffer size for the packet.  Note, for a DMX light with 5 channels
@@ -30,6 +34,19 @@ public abstract class LXDmxDatagram extends LXDatagram {
    */
   protected LXDmxDatagram(int bufferSize) {
     super(bufferSize);
+  }
+
+  /**
+   * Adds a fixture to this DMX512 packet, aka Universe.  Fixtures will be processed in order to build the
+   * 512 byte data frame.
+   * @param fixture The specific fixture to add to the Universe.  Should be a class that inherits from YFixture
+   *                with the appropriate pre-rgb and post-rgb hooks implemented for the specific device specs.
+   */
+  public void addFixture(YFixture fixture) {
+    if (fixtures == null) {
+      fixtures = new ArrayList<YFixture>();
+    }
+    fixtures.add(fixture);
   }
 
   /**
@@ -73,6 +90,9 @@ public abstract class LXDmxDatagram extends LXDatagram {
   }
 
   /**
+   * TODO(Tracy):  This should process a list of fixtures, where each fixture advances the offset
+   * by an appropriate amount.
+   *
    * Helper for subclasses to copy a list of points into the data buffer at a
    * specified offset. For many subclasses which wrap RGB buffers, onSend() will
    * be a simple call to this method with the right parameters.
@@ -83,7 +103,7 @@ public abstract class LXDmxDatagram extends LXDatagram {
    * @param offset Offset in buffer to write
    * @return this
    */
-  protected LXDmxDatagram copyPoints(int[] colors, byte[] glut, int[] indexBuffer, int offset) {
+  protected LXDmxDatagram copyPointsOld(int[] colors, byte[] glut, int[] indexBuffer, int offset) {
     int[] byteOffset = BYTE_ORDERING[this.byteOrder.ordinal()];
     offset += preRGBBlockHook(offset);
     for (int index : indexBuffer) {
@@ -98,6 +118,32 @@ public abstract class LXDmxDatagram extends LXDatagram {
     postRGBBlockHook(offset);
     return this;
   }
+
+  protected LXDmxDatagram copyPoints(int[] colors, byte[] glut, int[] indexBuffer, int offset) {
+    int[] byteOffset = BYTE_ORDERING[this.byteOrder.ordinal()];
+
+    int indexBufferPos = 0;
+    for (YFixture fixture : fixtures) {
+      // TODO(tracy): Add some bound-checking verification here?  indexBuffer.length should be greater than
+      // sum of all fixture.getNumberOfColors().
+      offset += fixture.preRGBBlockHook(this.buffer, offset);
+      for (int fixtureColorIndex = 0; fixtureColorIndex < fixture.getNumberOfColors(); fixtureColorIndex++) {
+        indexBufferPos += fixtureColorIndex;
+        int globalLXPointIndex = indexBuffer[indexBufferPos];
+        offset += fixture.preRGBHook(this.buffer, offset);
+        int color = (globalLXPointIndex >= 0) ? colors[globalLXPointIndex] : 0;
+        this.buffer[offset + byteOffset[0]] = glut[((color >> 16) & 0xff)]; // R
+        this.buffer[offset + byteOffset[1]] = glut[((color >> 8) & 0xff)]; // G
+        this.buffer[offset + byteOffset[2]] = glut[(color & 0xff)]; // B
+        offset += 3;
+        offset += fixture.postRGBHook(this.buffer, offset);
+      }
+      offset += fixture.postRGBBlockHook(this.buffer, offset);
+    }
+
+    return this;
+  }
+
 
   /**
    * Invoked by engine to send this packet when new color data is available. The
