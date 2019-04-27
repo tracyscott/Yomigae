@@ -4,7 +4,7 @@ package org.yomigae;
  * Base class representing a DMX fixture.  Used by LXDmxDatagram to build a DMX512 frame.  The
  * LXDmxDatagram will contain a list of fixtures and process them in order to build the frame.
  */
-public class YFixture {
+public class DmxFixture {
 
   protected int numColors;
 
@@ -13,7 +13,7 @@ public class YFixture {
    * implement pre-rgb and post-rgb hooks.  This class will handle serialization into the DMX512 packet.
    * @param numColors
    */
-  public YFixture (int numColors) {
+  public DmxFixture(int numColors) {
     this.numColors = numColors;
   }
 

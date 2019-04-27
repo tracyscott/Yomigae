@@ -1,16 +1,9 @@
 package org.yomigae;
 
-import heronarts.lx.parameter.BooleanParameter;
-import heronarts.lx.parameter.BoundedParameter;
 import heronarts.lx.output.LXDatagram;
 
-import java.net.DatagramPacket;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Datagram output meant for DMX devices.  This will provide hooks for supporting interleaved
@@ -24,7 +17,7 @@ import java.util.Map;
  */
 public abstract class LXDmxDatagram extends LXDatagram {
 
-  protected List<YFixture> fixtures;
+  protected List<DmxFixture> fixtures;
 
   /**
    * Construct a LXDmxDatagram that represents a single UDP packet.
@@ -39,12 +32,12 @@ public abstract class LXDmxDatagram extends LXDatagram {
   /**
    * Adds a fixture to this DMX512 packet, aka Universe.  Fixtures will be processed in order to build the
    * 512 byte data frame.
-   * @param fixture The specific fixture to add to the Universe.  Should be a class that inherits from YFixture
+   * @param fixture The specific fixture to add to the Universe.  Should be a class that inherits from DmxFixture
    *                with the appropriate pre-rgb and post-rgb hooks implemented for the specific device specs.
    */
-  public void addFixture(YFixture fixture) {
+  public void addFixture(DmxFixture fixture) {
     if (fixtures == null) {
-      fixtures = new ArrayList<YFixture>();
+      fixtures = new ArrayList<DmxFixture>();
     }
     fixtures.add(fixture);
   }
@@ -123,7 +116,7 @@ public abstract class LXDmxDatagram extends LXDatagram {
     int[] byteOffset = BYTE_ORDERING[this.byteOrder.ordinal()];
 
     int indexBufferPos = 0;
-    for (YFixture fixture : fixtures) {
+    for (DmxFixture fixture : fixtures) {
       // TODO(tracy): Add some bound-checking verification here?  indexBuffer.length should be greater than
       // sum of all fixture.getNumberOfColors().
       offset += fixture.preRGBBlockHook(this.buffer, offset);

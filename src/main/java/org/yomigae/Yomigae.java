@@ -1,25 +1,13 @@
 package org.yomigae;
 
 import com.google.common.reflect.ClassPath;
-import com.google.gson.JsonObject;
-import heronarts.lx.LX;
-import heronarts.lx.LXComponent;
 import heronarts.lx.LXEffect;
 import heronarts.lx.LXPattern;
-import heronarts.lx.midi.LXMidiEngine;
-import heronarts.lx.midi.LXMidiOutput;
 import heronarts.lx.model.LXModel;
-import heronarts.lx.osc.LXOscEngine;
 import heronarts.lx.studio.LXStudio;
-import heronarts.p3lx.ui.UI3dContext;
-import heronarts.p3lx.ui.UIEventHandler;
-import heronarts.p3lx.ui.component.UIGLPointCloud;
+
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Modifier;
-import java.net.InetAddress;
-import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -29,7 +17,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 import processing.core.PApplet;
-import processing.event.KeyEvent;
 
 public class Yomigae extends PApplet {
 	
@@ -82,6 +69,12 @@ public class Yomigae extends PApplet {
 
   public static PApplet pApplet;
   public static final int GLOBAL_FRAME_RATE = 40;
+
+  public static UIWhiteControl laluceWhiteControl;
+  public static UIWhiteControl prodParWhiteControl;
+  public static UIWhiteControl prodWashWhiteControl;
+  public static UIFixtureType fixtureTypeControl;
+
 
     @Override
   public void settings() {
@@ -155,8 +148,17 @@ public class Yomigae extends PApplet {
 
     lx.ui.setResizable(RESIZABLE);
 
-    if (enableArtNet) {
-      Output.configureLaluceOutput(lx);
+    fixtureTypeControl = (UIFixtureType) new UIFixtureType(lx.ui, lx).setExpanded(true).addToContainer(lx.ui.leftPane.global);
+
+    laluceWhiteControl = (UIWhiteControl) new UIWhiteControl(lx.ui, "LALUCE WHITE", "laluce_whites").
+        setExpanded(true).addToContainer(lx.ui.leftPane.global);
+    prodParWhiteControl = (UIWhiteControl) new UIWhiteControl(lx.ui, "PRODPAR WHITE", "prodpar_whites")
+        .setExpanded(true).addToContainer(lx.ui.leftPane.global);
+    prodWashWhiteControl = (UIWhiteControl) new UIWhiteControl(lx.ui, "PRODWASH WHITE", "prodwash_whites")
+        .setExpanded(true).addToContainer(lx.ui.leftPane.global);
+
+    if (enableOutput) {
+      Output.configureE131Output(lx, Output.LightType.LALUCE);
     }
     if (disableOutputOnStart)
       lx.engine.output.enabled.setValue(false);
@@ -200,7 +202,7 @@ public class Yomigae extends PApplet {
   final static float M = CM * 100;
   final static float METER = M;
 
-  public static final boolean enableArtNet = true;
+  public static final boolean enableOutput = true;
   public static final boolean disableOutputOnStart = false;
 
   public static final int LEDS_PER_UNIVERSE = 170;

@@ -2,10 +2,11 @@ package org.yomigae;
 
 import heronarts.lx.LX;
 import heronarts.lx.output.LXDatagramOutput;
-import heronarts.lx.output.StreamingACNDatagram;
 
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,9 +16,36 @@ import java.util.logging.Logger;
 public class Output {
   private static final Logger logger = Logger.getLogger(Output.class.getName());
 
+  public enum LightType {
+    LALUCE(1),
+    PRODPAR(2),
+    PRODWASH(3);
+
+    private int value;
+    private static Map map = new HashMap<Integer, LightType>();
+
+    private LightType(int value) {
+      this.value = value;
+    }
+
+    static {
+      for (LightType lightType : LightType.values()) {
+        map.put(lightType.value, lightType);
+      }
+    }
+
+    public static LightType valueOf(int pageType) {
+      return (LightType) map.get(pageType);
+    }
+
+    public int getValue() {
+      return value;
+    }
+  }
+
   public static LXDatagramOutput datagramOutput = null;
 
-  public static void configureLaluceOutput(LX lx) {
+  public static void configureE131Output(LX lx, LightType lightType) {
 
     // R,G,B,W + Master Dimmer value
     int[] dmxChannelsForUniverse = new int[1];
@@ -53,14 +81,28 @@ public class Output {
     for (int i = 0; i < 1; i++) {
       dmxChannelsForUniverse[i] = i;
     }
-    E131DmxDatagram laluceDatagram = new E131DmxDatagram(1, 512,
+    E131DmxDatagram e131Datagram = new E131DmxDatagram(1, 512,
         dmxChannelsForUniverse);
-    YFixture laluceFixture = new YFixture(1);
-    laluceDatagram.addFixture(laluceFixture);
-    
+
+    switch (lightType) {
+      case LALUCE:
+        FixtureLaluce24Par laluceFixture = new FixtureLaluce24Par(1);
+        e131Datagram.addFixture(laluceFixture);
+        e131Datagram.addFixture(laluceFixture);
+        break;
+      case PRODPAR:
+        FixtureProdPar prodParFixture = new FixtureProdPar(1);
+        e131Datagram.addFixture(prodParFixture);
+        break;
+      case PRODWASH:
+        FixtureProdWash prodWashFixture = new FixtureProdWash(1);
+        e131Datagram.addFixture(prodWashFixture);
+        break;
+    }
+
     String dmxIpAddress = "239.255.0.1";
     try {
-      laluceDatagram.setAddress(dmxIpAddress);
+      e131Datagram.setAddress(dmxIpAddress);
     } catch (UnknownHostException uhex) {
       logger.log(Level.SEVERE, "Configuring ArtNet: " + dmxIpAddress, uhex);
     }
@@ -68,7 +110,7 @@ public class Output {
     LXDatagramOutput datagramOutput = null;
     try {
       datagramOutput = new LXDatagramOutput(lx);
-      datagramOutput.addDatagram(laluceDatagram);
+      datagramOutput.addDatagram(e131Datagram);
     } catch (SocketException sex) {
       logger.log(Level.SEVERE, "Initializing LXDatagramOutput failed.", sex);
     }

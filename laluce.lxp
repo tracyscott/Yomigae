@@ -1,10 +1,10 @@
 {
   "version": "0.1.1",
-  "timestamp": 1556269714205,
+  "timestamp": 1556400682385,
   "model": {
     "id": 2,
     "class": "heronarts.lx.structure.LXStructure",
-    "modulationColor": -20736,
+    "modulationColor": -2490624,
     "internal": {},
     "parameters": {
       "label": "LX",
@@ -89,7 +89,7 @@
             "internal": {},
             "parameters": {
               "label": "LFO",
-              "running": true,
+              "running": false,
               "trigger": false,
               "loop": true,
               "tempoSync": false,
@@ -105,7 +105,7 @@
               "exp": 0.0
             },
             "children": {},
-            "basis": 0.4610000000000407
+            "basis": 0.013000000000003453
           }
         ],
         "modulations": [

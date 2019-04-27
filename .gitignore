@@ -1,4 +1,5 @@
 .lxproject
+.lxpreferences
 .DS_Store
 .idea/
 *.iml
@@ -6,3 +7,4 @@
 target/
 *.lck
 *.tmp
+
