@@ -1,10 +1,10 @@
 {
   "version": "0.1.1",
-  "timestamp": 1556400682385,
+  "timestamp": 1556406656055,
   "model": {
     "id": 2,
     "class": "heronarts.lx.structure.LXStructure",
-    "modulationColor": -2490624,
+    "modulationColor": -1573120,
     "internal": {},
     "parameters": {
       "label": "LX",
@@ -293,7 +293,7 @@
         "children": {},
         "effects": [],
         "clips": [],
-        "patternIndex": 1,
+        "patternIndex": 2,
         "patterns": [
           {
             "id": 27,
@@ -344,6 +344,37 @@
                 "id": 44,
                 "class": "heronarts.lx.LXModulationEngine",
                 "modulationColor": -65511,
+                "internal": {},
+                "parameters": {
+                  "label": "Modulation"
+                },
+                "children": {},
+                "modulators": [],
+                "modulations": [],
+                "triggers": []
+              }
+            }
+          },
+          {
+            "id": 85,
+            "class": "org.yomigae.RGBManual",
+            "modulationColor": -12032,
+            "internal": {
+              "expanded": true,
+              "modulationExpanded": false,
+              "autoCycleEligible": true
+            },
+            "parameters": {
+              "label": "RGBManual",
+              "R": 1.0,
+              "G": 0.43999999202787876,
+              "B": 0.4999999888241291
+            },
+            "children": {
+              "modulation": {
+                "id": 86,
+                "class": "heronarts.lx.LXModulationEngine",
+                "modulationColor": -15925504,
                 "internal": {},
                 "parameters": {
                   "label": "Modulation"
