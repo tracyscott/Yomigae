@@ -53,7 +53,7 @@ public class Output {
     for (int i = 0; i < 1; i++) {
       dmxChannelsForUniverse[i] = i;
     }
-    E131DmxDatagram laluceDatagram = new E131DmxDatagram(1, 5 * dmxChannelsForUniverse.length,
+    E131DmxDatagram laluceDatagram = new E131DmxDatagram(1, 512,
         dmxChannelsForUniverse);
     YFixture laluceFixture = new YFixture(1);
     laluceDatagram.addFixture(laluceFixture);
@@ -73,6 +73,7 @@ public class Output {
       logger.log(Level.SEVERE, "Initializing LXDatagramOutput failed.", sex);
     }
     if (datagramOutput != null) {
+      System.out.println("Output added");
       lx.engine.output.addChild(datagramOutput);
     } else {
       logger.log(Level.SEVERE, "Did not configure output, error during LXDatagramOutput init");

@@ -25,8 +25,8 @@ public class YomigaeModel3D extends LXModel {
 
   public static List<LXPoint> generatePoints() {
     List<LXPoint> yomigaePoints = new ArrayList<LXPoint>();
-    for (int z = 0; z < 2; z++) {
-      for (int x = 0; x < 20; x++) {
+    for (int z = 0; z < 1; z++) {
+      for (int x = 0; x < 1; x++) {
         yomigaePoints.add(new LXPoint(x * 1.5f, 10.0f, z * 4.0f));
       }
     }
