@@ -1,10 +1,10 @@
 {
   "version": "0.1.1",
-  "timestamp": 1556418515575,
+  "timestamp": 1556418545496,
   "model": {
     "id": 2,
     "class": "heronarts.lx.structure.LXStructure",
-    "modulationColor": -16711935,
+    "modulationColor": -29184,
     "internal": {},
     "parameters": {
       "label": "LX",
@@ -105,7 +105,7 @@
               "exp": 0.0
             },
             "children": {},
-            "basis": 0.5210000000000357
+            "basis": 0.4900000000000464
           }
         ],
         "modulations": [
