@@ -388,4 +388,12 @@ public class Tori
     }
     return points;
   }
+
+  static public boolean isLeftHalfTori(List<Tori> toris, int lightNumber) {
+    return lightNumber <= toris.size() / 2;
+  }
+
+  static public boolean isHallTori(List<Tori> toris, int lightNumber) {
+    return (lightNumber > 5 && lightNumber < 16);
+  }
 }
