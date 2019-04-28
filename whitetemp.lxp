@@ -1,10 +1,10 @@
 {
   "version": "0.1.1",
-  "timestamp": 1556418545496,
+  "timestamp": 1556420113173,
   "model": {
     "id": 2,
     "class": "heronarts.lx.structure.LXStructure",
-    "modulationColor": -29184,
+    "modulationColor": -16712961,
     "internal": {},
     "parameters": {
       "label": "LX",
@@ -96,7 +96,7 @@
               "tempoMultiplier": 5,
               "tempoLock": true,
               "clockMode": 0,
-              "periodFast": 1000.0,
+              "periodFast": 10156.432748448718,
               "periodSlow": 10000.0,
               "wave": 0,
               "skew": 0.0,
@@ -105,7 +105,7 @@
               "exp": 0.0
             },
             "children": {},
-            "basis": 0.4900000000000464
+            "basis": 0.29232943482048396
           }
         ],
         "modulations": [
@@ -419,7 +419,8 @@
             },
             "parameters": {
               "label": "WhiteTemp",
-              "Kelvins": 1900.0
+              "Kelvins": 1900.0,
+              "Intensity": 1.0
             },
             "children": {
               "modulation": {
