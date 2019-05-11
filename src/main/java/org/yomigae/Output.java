@@ -1,6 +1,7 @@
 package org.yomigae;
 
 import heronarts.lx.LX;
+import heronarts.lx.output.ArtNetDatagram;
 import heronarts.lx.output.LXDatagramOutput;
 
 import java.net.SocketException;
@@ -19,7 +20,8 @@ public class Output {
   public enum LightType {
     LALUCE(1),
     PRODPAR(2),
-    PRODWASH(3);
+    PRODWASH(3),
+    OPPSKPAR(4);
 
     private int value;
     private static Map map = new HashMap<Integer, LightType>();
@@ -45,10 +47,42 @@ public class Output {
 
   public static LXDatagramOutput datagramOutput = null;
 
+  public static String artnetIpAddress = "127.0.0.1";
+  public static int artnetPort = 6454;
+
+  public static void configureArtnetOutput(LX lx) {
+    // This only works if we have less than 170 lxpoints.
+    int[] dmxChannelsForUniverse = new int[20];
+    for (int i = 0; i < 20; i++) {
+      dmxChannelsForUniverse[i] = i;
+    }
+    ArtNetDatagram artnetDatagram = new ArtNetDatagram(dmxChannelsForUniverse);
+
+    try {
+      artnetDatagram.setAddress(artnetIpAddress).setPort(artnetPort);
+    } catch (UnknownHostException uhex) {
+      logger.log(Level.SEVERE, "Configuring ArtNet: " + artnetIpAddress, uhex);
+    }
+    try {
+      datagramOutput = new LXDatagramOutput(lx);
+      datagramOutput.addDatagram(artnetDatagram);
+    } catch (SocketException sex) {
+      logger.log(Level.SEVERE, "Initializing LXDatagramOutput failed.", sex);
+    }
+    if (datagramOutput != null) {
+      System.out.println("Output added");
+      lx.engine.output.addChild(datagramOutput);
+    } else {
+      logger.log(Level.SEVERE, "Did not configure output, error during LXDatagramOutput init");
+    }
+  }
+
   public static void configureE131Output(LX lx, LightType lightType) {
 
-    // R,G,B,W + Master Dimmer value
-    int[] dmxChannelsForUniverse = new int[1];
+
+    int[] dmxChannelsForUniverse = new int[2];
+
+    // R,G,B,W + Master Dimmer value f
     // Multicast 239.255.UniverseHighByte.UniverseLowByte
     // Multicast 239.255.0.*universe number*  since we have only a few universes
     // Universe is 512 channels
@@ -78,7 +112,7 @@ public class Output {
     //
 
     // For a single light, just pack the first colors[pointIndex] value into the datagram.
-    for (int i = 0; i < 1; i++) {
+    for (int i = 0; i < 2; i++) {
       dmxChannelsForUniverse[i] = i;
     }
     E131DmxDatagram e131Datagram = new E131DmxDatagram(1, 512,
@@ -89,6 +123,14 @@ public class Output {
         FixtureLaluce24Par laluceFixture = new FixtureLaluce24Par(1);
         e131Datagram.addFixture(laluceFixture);
         e131Datagram.addFixture(laluceFixture);
+        break;
+      case OPPSKPAR:
+        // NOTE(tracy): I'm testing the OPPSk along with existing LaLuce so I can test multiple light
+        // types in a single universe.
+        //laluceFixture = new FixtureLaluce24Par(1);
+        FixtureOPPSk7LedPar oppSkFixture = new FixtureOPPSk7LedPar(1);
+        //e131Datagram.addFixture(laluceFixture);
+        e131Datagram.addFixture(oppSkFixture);
         break;
       case PRODPAR:
         FixtureProdPar prodParFixture = new FixtureProdPar(1);
@@ -107,7 +149,6 @@ public class Output {
       logger.log(Level.SEVERE, "Configuring ArtNet: " + dmxIpAddress, uhex);
     }
 
-    LXDatagramOutput datagramOutput = null;
     try {
       datagramOutput = new LXDatagramOutput(lx);
       datagramOutput.addDatagram(e131Datagram);

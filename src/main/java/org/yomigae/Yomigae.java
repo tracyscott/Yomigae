@@ -73,8 +73,8 @@ public class Yomigae extends PApplet {
   public static UIWhiteControl laluceWhiteControl;
   public static UIWhiteControl prodParWhiteControl;
   public static UIWhiteControl prodWashWhiteControl;
+  public static UIWhiteControl oppSkWhiteControl;
   public static UIFixtureType fixtureTypeControl;
-
 
     @Override
   public void settings() {
@@ -137,7 +137,7 @@ public class Yomigae extends PApplet {
     LXStudio.Flags flags = new LXStudio.Flags();
     flags.showFramerate = false;
     flags.isP3LX = true;
-    flags.immutableModel = false;
+    flags.immutableModel = true;
 
     logger.info("Current renderer:" + sketchRenderer());
     logger.info("Current graphics:" + getGraphics());
@@ -146,19 +146,22 @@ public class Yomigae extends PApplet {
     logger.info("Multithreaded actually: " + (MULTITHREADED && !getGraphics().isGL()));
     lx = new LXStudio(this, flags, model);
 
-    lx.ui.setResizable(RESIZABLE);
+    lx.ui.setResizable(true);
 
     fixtureTypeControl = (UIFixtureType) new UIFixtureType(lx.ui, lx).setExpanded(true).addToContainer(lx.ui.leftPane.global);
 
     laluceWhiteControl = (UIWhiteControl) new UIWhiteControl(lx.ui, "LALUCE WHITE", "laluce_whites").
-        setExpanded(true).addToContainer(lx.ui.leftPane.global);
+        setExpanded(false).addToContainer(lx.ui.leftPane.global);
     prodParWhiteControl = (UIWhiteControl) new UIWhiteControl(lx.ui, "PRODPAR WHITE", "prodpar_whites")
-        .setExpanded(true).addToContainer(lx.ui.leftPane.global);
+        .setExpanded(false).addToContainer(lx.ui.leftPane.global);
     prodWashWhiteControl = (UIWhiteControl) new UIWhiteControl(lx.ui, "PRODWASH WHITE", "prodwash_whites")
-        .setExpanded(true).addToContainer(lx.ui.leftPane.global);
+        .setExpanded(false).addToContainer(lx.ui.leftPane.global);
+    oppSkWhiteControl = (UIWhiteControl) new UIWhiteControl(lx.ui, "OPPSK WHITE", "oppskpar_whites")
+        .setExpanded(false).addToContainer(lx.ui.leftPane.global);
 
     if (enableOutput) {
-      Output.configureE131Output(lx, Output.LightType.LALUCE);
+      Output.configureE131Output(lx, Output.LightType.OPPSKPAR);
+      //Output.configureArtnetOutput(lx);
     }
     if (disableOutputOnStart)
       lx.engine.output.enabled.setValue(false);
@@ -203,7 +206,7 @@ public class Yomigae extends PApplet {
   final static float METER = M;
 
   public static final boolean enableOutput = true;
-  public static final boolean disableOutputOnStart = false;
+  public static final boolean disableOutputOnStart = true;
 
   public static final int LEDS_PER_UNIVERSE = 170;
 }

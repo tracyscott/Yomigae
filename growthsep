@@ -1,10 +1,10 @@
 {
   "version": "0.1.1",
-  "timestamp": 1556486437554,
+  "timestamp": 1556429063378,
   "model": {
     "id": 2,
     "class": "heronarts.lx.structure.LXStructure",
-    "modulationColor": -16711748,
+    "modulationColor": -65311,
     "internal": {},
     "parameters": {
       "label": "LX",
@@ -33,7 +33,7 @@
       "multithreaded": true,
       "channelMultithreaded": false,
       "networkMultithreaded": false,
-      "framesPerSecond": 30.0,
+      "framesPerSecond": 60.0,
       "mixerViewCondensed": false
     },
     "children": {
@@ -89,7 +89,7 @@
             "internal": {},
             "parameters": {
               "label": "LFO",
-              "running": false,
+              "running": true,
               "trigger": false,
               "loop": true,
               "tempoSync": false,
@@ -105,7 +105,7 @@
               "exp": 0.0
             },
             "children": {},
-            "basis": 0.8926351792885132
+            "basis": 0.93921470924768
           }
         ],
         "modulations": [
