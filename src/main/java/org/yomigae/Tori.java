@@ -376,7 +376,20 @@ public class Tori
 
       float[] spotPos = tg.getOutsideEaveEdgeLightBar(-0.00f);
       tg.localToWorld(spotPos);
-      points.add(new LXPoint(spotPos[0], spotPos[1], spotPos[2]));
+
+      int totalLeds = 6;
+      if (!(i > 6 && i < 13)) {
+        totalLeds = 12;
+      }
+
+      for (int ledNum = 0; ledNum < totalLeds; ledNum++) {
+        float halfWidth = 1f / 2f;
+        if (totalLeds == 12) {
+          halfWidth = 1f;
+        }
+        float xOffset = (1f / 6f) * ledNum - halfWidth;
+        points.add(new LXPoint(spotPos[0] + xOffset, spotPos[1], spotPos[2]));
+      }
     }
 
     for (int i = 15; i < toris.size(); i++)
@@ -389,11 +402,14 @@ public class Tori
     return points;
   }
 
-  static public boolean isLeftHalfTori(List<Tori> toris, int lightNumber) {
-    return lightNumber <= toris.size() / 2;
+  static public boolean isLeftHalfTori(int lightNumber) {
+    // Half is light numbers 1-5 + 7 * 6 = 4 + 42 = 46
+    return lightNumber <= 47;
   }
 
-  static public boolean isHallTori(List<Tori> toris, int lightNumber) {
-    return (lightNumber > 5 && lightNumber < 16);
+  static public boolean isHallTori(int lightNumber) {
+    // 15, so it was 10 light bars. + 4 light bars for small tori.
+    // 14 * 6 = 84 dmx address on big tori.
+    return (lightNumber > 5 && lightNumber < 90);
   }
 }

@@ -1,10 +1,10 @@
 {
   "version": "0.1.1",
-  "timestamp": 1556486437554,
+  "timestamp": 1563217616470,
   "model": {
     "id": 2,
     "class": "heronarts.lx.structure.LXStructure",
-    "modulationColor": -16711748,
+    "modulationColor": -11075329,
     "internal": {},
     "parameters": {
       "label": "LX",
@@ -122,28 +122,6 @@
             "id": 64,
             "class": "heronarts.lx.parameter.LXCompoundModulation",
             "modulationColor": -6356737,
-            "internal": {},
-            "parameters": {
-              "label": "LX",
-              "enabled": true,
-              "Polarity": 0,
-              "Range": 1.0
-            },
-            "children": {}
-          },
-          {
-            "source": {
-              "id": 63,
-              "path": "/modulation/modulator/1"
-            },
-            "target": {
-              "componentId": 109,
-              "parameterPath": "Kelvins",
-              "path": "/channel/1/pattern/4/Kelvins"
-            },
-            "id": 111,
-            "class": "heronarts.lx.parameter.LXCompoundModulation",
-            "modulationColor": -8453889,
             "internal": {},
             "parameters": {
               "label": "LX",
@@ -494,9 +472,9 @@
         "centerPoint": false,
         "camera": {
           "active": false,
-          "radius": 15.987663545089779,
-          "theta": 3.1141311357644783,
-          "phi": 0.24374425669808655,
+          "radius": 3.714280653535274,
+          "theta": 3.1388464535309515,
+          "phi": 0.31145099466977705,
           "x": -2.7731465101242065,
           "y": 9.794077262282372,
           "z": 0.12740397034212947
@@ -504,9 +482,9 @@
         "cue": [
           {
             "active": false,
-            "radius": 15.987663545089779,
-            "theta": 3.1141311357644783,
-            "phi": 0.24374425669808655,
+            "radius": 3.714280653535274,
+            "theta": 3.1388464535309515,
+            "phi": 0.31145099466977705,
             "x": -2.7731465101242065,
             "y": 9.794077262282372,
             "z": 0.12740397034212947
@@ -559,7 +537,7 @@
         ],
         "focus": 0,
         "pointCloud": {
-          "pointSize": 10.0
+          "pointSize": 3.0
         }
       }
     }

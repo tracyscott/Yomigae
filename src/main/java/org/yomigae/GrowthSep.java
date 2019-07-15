@@ -10,7 +10,7 @@ import java.awt.Color;
 import java.util.List;
 
 
-@LXCategory(LXCategory.TEST)
+@LXCategory(LXCategory.FORM)
 public class GrowthSep extends LXPattern {
   public final CompoundParameter minIntensityP = new CompoundParameter
       ("minIntensity", 0.3f, 0.0f, 1.0f).setDescription("Minimum light intensity");
@@ -158,13 +158,13 @@ public class GrowthSep extends LXPattern {
           float startOffset = 1.0f / l1BrightWhiteHallAttack;
           waveDistance = Tori.bigToriGateDistance + startOffset;
 
-          if (Tori.isHallTori(toris, lightNumber) && Tori.isLeftHalfTori(toris, lightNumber)) {
+          if (Tori.isHallTori(lightNumber) && Tori.isLeftHalfTori(lightNumber)) {
             float stepPosX1 = minX + Tori.toriGateDistance + startOffset - waveDistance * (time / l1BrightWhiteHallGrowthTime);
             float valueLeft = AnimUtils.stepWave(stepPosX1, l1BrightWhiteHallAttack, p.x, false);
             intensity = l1MinIntensity + (l1MaxIntensity - l1MinIntensity) * valueLeft;
             kelvins = valueLeft * (maxKelvins - minKelvins) + minKelvins;
             return true;
-          } else if (Tori.isHallTori(toris, lightNumber) && !Tori.isLeftHalfTori(toris, lightNumber)) {
+          } else if (Tori.isHallTori(lightNumber) && !Tori.isLeftHalfTori(lightNumber)) {
             float stepPosX2 = (maxX - Tori.toriGateDistance - startOffset) + waveDistance * (time / l1BrightWhiteHallGrowthTime);
             float valueRight = AnimUtils.stepWave(stepPosX2, l1BrightWhiteHallAttack, p.x, true);
             intensity = l1MinIntensity + (l1MaxIntensity - l1MinIntensity) * valueRight;
@@ -178,10 +178,10 @@ public class GrowthSep extends LXPattern {
         case GROWTH_HOLD:
           return false;
         case TUNNEL_SPREAD:
-          // Start a triangle wave just off the edge of the tunnel.  Small tori gates are updated with
-          // a traveling triangle wave.  Big Tori gates will use a step function with attack to return to
+          // Start a tSriangle wave just off the edge of the tunnel.  mall tori gates are updated with
+          // a traveling triangle wave.  Big Tori gates/Hall Tori will use a step function with attack to return to
           // dim state.
-          if (lightNumber <= 5 || lightNumber >= 16) {
+          if (!Tori.isHallTori(lightNumber)) {
             // getTriangleIntensity is not normalized to 1.0, so we need to multiply by our range to get
             // the appropriate start offset.
             float tunnelSpreadStartOffset = 1.0f / l1TunnelAttack;
@@ -206,12 +206,12 @@ public class GrowthSep extends LXPattern {
             // Big Tori's using step wave to dim.
             startOffset = 1.0f / l1BrightWhiteHallAttack;
             waveDistance = Tori.bigToriGateDistance + startOffset;
-            if (Tori.isLeftHalfTori(toris, lightNumber) && Tori.isHallTori(toris, lightNumber)) {
+            if (Tori.isLeftHalfTori(lightNumber) && Tori.isHallTori(lightNumber)) {
               float stepPosX1 = minX + Tori.toriGateDistance + startOffset - waveDistance + waveDistance * (time / l1TunnelSpreadTime);
               float valueLeft = AnimUtils.stepWave(stepPosX1, l1BrightWhiteHallAttack, p.x, false);
               intensity = l1MinIntensity + (l1MaxIntensity - l1MinIntensity) * valueLeft;
               kelvins = valueLeft * (maxKelvins - minKelvins) + minKelvins;
-            } else if (!Tori.isLeftHalfTori(toris, lightNumber) && Tori.isHallTori(toris, lightNumber)) {
+            } else if (!Tori.isLeftHalfTori(lightNumber) && Tori.isHallTori(lightNumber)) {
               float stepPosX2 = (maxX - Tori.toriGateDistance) + Tori.bigToriGateDistance - waveDistance * (time / l1TunnelSpreadTime);
               float valueRight = AnimUtils.stepWave(stepPosX2, l1BrightWhiteHallAttack, p.x, true);
               intensity = l1MinIntensity + (l1MaxIntensity - l1MinIntensity) * valueRight;

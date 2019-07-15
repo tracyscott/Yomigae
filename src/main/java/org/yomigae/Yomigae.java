@@ -160,8 +160,8 @@ public class Yomigae extends PApplet {
         .setExpanded(false).addToContainer(lx.ui.leftPane.global);
 
     if (enableOutput) {
-      Output.configureE131Output(lx, Output.LightType.OPPSKPAR);
-      //Output.configureArtnetOutput(lx);
+      //Output.configureE131Output(lx, Output.LightType.OPPSKPAR);
+      Output.configureArtnetOutput(lx);
     }
     if (disableOutputOnStart)
       lx.engine.output.enabled.setValue(false);

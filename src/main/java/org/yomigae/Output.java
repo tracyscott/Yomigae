@@ -52,8 +52,9 @@ public class Output {
 
   public static void configureArtnetOutput(LX lx) {
     // This only works if we have less than 170 lxpoints.
-    int[] dmxChannelsForUniverse = new int[20];
-    for (int i = 0; i < 20; i++) {
+    int numPoints = lx.getModel().getPoints().size();
+    int[] dmxChannelsForUniverse = new int[numPoints];
+    for (int i = 0; i < numPoints; i++) {
       dmxChannelsForUniverse[i] = i;
     }
     ArtNetDatagram artnetDatagram = new ArtNetDatagram(dmxChannelsForUniverse);
