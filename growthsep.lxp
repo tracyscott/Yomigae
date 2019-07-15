@@ -1,10 +1,10 @@
 {
   "version": "0.1.1",
-  "timestamp": 1563217616470,
+  "timestamp": 1563226164551,
   "model": {
     "id": 2,
     "class": "heronarts.lx.structure.LXStructure",
-    "modulationColor": -11075329,
+    "modulationColor": -9240321,
     "internal": {},
     "parameters": {
       "label": "LX",
@@ -293,7 +293,7 @@
         "children": {},
         "effects": [],
         "clips": [],
-        "patternIndex": 4,
+        "patternIndex": 5,
         "patterns": [
           {
             "id": 27,
@@ -447,6 +447,38 @@
                 "triggers": []
               }
             }
+          },
+          {
+            "id": 165,
+            "class": "org.yomigae.ConvRebirth",
+            "modulationColor": -5963521,
+            "internal": {
+              "expanded": true,
+              "modulationExpanded": false,
+              "autoCycleEligible": true
+            },
+            "parameters": {
+              "label": "ConvRebirth",
+              "minIntensity": 0.4500000085681677,
+              "maxIntensity": 1.0,
+              "minK": 1900.0,
+              "maxK": 7000.0
+            },
+            "children": {
+              "modulation": {
+                "id": 166,
+                "class": "heronarts.lx.LXModulationEngine",
+                "modulationColor": -16711817,
+                "internal": {},
+                "parameters": {
+                  "label": "Modulation"
+                },
+                "children": {},
+                "modulators": [],
+                "modulations": [],
+                "triggers": []
+              }
+            }
           }
         ]
       }
@@ -472,7 +504,7 @@
         "centerPoint": false,
         "camera": {
           "active": false,
-          "radius": 3.714280653535274,
+          "radius": 11.356820689988403,
           "theta": 3.1388464535309515,
           "phi": 0.31145099466977705,
           "x": -2.7731465101242065,
@@ -482,7 +514,7 @@
         "cue": [
           {
             "active": false,
-            "radius": 3.714280653535274,
+            "radius": 11.356820689988403,
             "theta": 3.1388464535309515,
             "phi": 0.31145099466977705,
             "x": -2.7731465101242065,
@@ -537,7 +569,7 @@
         ],
         "focus": 0,
         "pointCloud": {
-          "pointSize": 3.0
+          "pointSize": 10.0
         }
       }
     }
