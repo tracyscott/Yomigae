@@ -34,10 +34,20 @@ public abstract class YPattern extends LXPattern {
 
   public float minIntensity = 0.5f;
   public float maxIntensity = 1.0f;
+  protected float phaseStartIntensity = minIntensity;
+  protected float phaseStartKelvins = minKelvins;
+
   protected float time = 0.0f;
+  protected float curPhaseDuration = 0.0f;
+
   List<Tori> toris;
   List<String> phaseNames = new ArrayList<String>();
   List<CompoundParameter> phaseDurations = new ArrayList<CompoundParameter>();
+  float[] prevFrameIntensities;
+  float[] prevFrameKelvins;
+  float[] prevPhaseIntensities;
+  float[] prevPhaseKelvins;
+
   int curAnimPhase;
 
   // Values specific to ConvRebirth.
@@ -54,6 +64,10 @@ public abstract class YPattern extends LXPattern {
     addParameter(maxIntensityP);
     addParameter(minKelvinsP);
     addParameter(maxKelvinsP);
+    prevFrameIntensities = new float[lx.getModel().getPoints().size()];
+    prevFrameKelvins = new float[lx.getModel().getPoints().size()];
+    prevPhaseIntensities = new float[lx.getModel().getPoints().size()];
+    prevPhaseKelvins = new float[lx.getModel().getPoints().size()];
   }
 
   /**
@@ -94,7 +108,12 @@ public abstract class YPattern extends LXPattern {
 
     boolean lightUpdated = true;
     boolean resetTime = false;
-    float percentDone = time / phaseDurations.get(curAnimPhase).getValuef();
+    curPhaseDuration = phaseDurations.get(curAnimPhase).getValuef();
+    float percentDone = time / curPhaseDuration;
+
+    // First we iterate over all the points and potentially update intensity and kelvins.  Note, that
+    // some calls to assignLightColor don't result in an update.  For example, if we are just in an
+    // animation phase that is holding a value.
     for (LXPoint p : model.points) {
       lightUpdated = assignLightColor(phaseNames.get(curAnimPhase), p, lightNumber, percentDone);
       ++lightNumber;
@@ -104,19 +123,37 @@ public abstract class YPattern extends LXPattern {
       // I saw some color flicker but I can reproduce it. Not sure if our colors[] buffer is
       // being modified somewhere else?
       if (lightUpdated) {
-        ColorTemp.convertKToRGB(kelvins, rgb);
-        // Convert RGB to HSB and scale by intensity
-        Color.RGBtoHSB(rgb[0], rgb[1], rgb[2], hsb);
-        hsb[2] = intensity * hsb[2];
-        colors[p.index] = LXColor.hsb(hsb[0] * 360.0f, hsb[1] * 100.0f, hsb[2] * 100.0f);
+        prevFrameIntensities[p.index] = intensity;
+        prevFrameKelvins[p.index] = kelvins;
       }
     }
+    // Now that we have updated our intensity/kelvins values, push them to our 'colors' buffer.
+    copyIntensityKelvinsToColors();
     resetTime = updateAnimPhase();
     if (resetTime) {
+      // Store the last intensities and kelvins when we switch phases.  This allows us to morph any
+      // set of varying values for each light to some target intensity/kelvins.  See Breath for an example.
+      System.arraycopy(prevFrameIntensities, 0, prevPhaseIntensities, 0, prevPhaseIntensities.length);
+      System.arraycopy(prevFrameKelvins, 0, prevPhaseKelvins, 0, prevPhaseKelvins.length);
+      phaseStartKelvins = kelvins;
       time = 0.0f;
       System.out.println("Changing anim phase to: " + phaseNames.get(curAnimPhase));
     } else {
       time += deltaMs / 1000f;
+    }
+  }
+
+  protected void copyIntensityKelvinsToColors() {
+    int[] rgb = new int[3];
+    float[] hsb = new float[3];
+    for (int i = 0; i < prevFrameIntensities.length; i++) {
+      float intensity = prevFrameIntensities[i];
+      float kelvins = prevFrameKelvins[i];
+      ColorTemp.convertKToRGB(kelvins, rgb);
+      // Convert RGB to HSB and scale by intensity
+      Color.RGBtoHSB(rgb[0], rgb[1], rgb[2], hsb);
+      hsb[2] = intensity * hsb[2];
+      colors[i] = LXColor.hsb(hsb[0] * 360.0f, hsb[1] * 100.0f, hsb[2] * 100.0f);
     }
   }
 
